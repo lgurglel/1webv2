@@ -28,7 +28,8 @@
             max-width: 1000px;
             width: 100%;
         }
-        #resultTable{
+
+        #resultTable {
             max-width: 1000px;
             width: 100%;
         }
@@ -38,7 +39,7 @@
             border-radius: 50px;
         }
 
-        .button{
+        .button {
             width: 150px;
             height: 50px;
             font-size: 10px;
@@ -46,23 +47,27 @@
             border-radius: 50px;
         }
 
-        .check{
+        .check {
             background: green;
         }
 
-        .check:hover{
+        .check:hover {
             background: #056205;
         }
-        .clear{
+
+        .clear {
             background: red;
         }
-        .clear:hover{
+
+        .clear:hover {
             background: #ac0303;
         }
-        #R{
+
+        #R {
             text-align: center;
         }
-        #Y{
+
+        #Y {
             text-align: center;
         }
     </style>
@@ -74,51 +79,54 @@
     <br>
 </header>
 
-<main id="main">
-    <form id = "form" action="" method="POST">
-        <table id="mainTable" class="center boardTable">
-            <tr>
-                <td>
-                    <div>
-                        <div>Выберете X:</div>
-                        <label><input id="X1" type="checkbox" name="X" value="-4">-4</label>
-                        <label><input id="X2" type="checkbox" name="X" value="-3">-3</label>
-                        <label><input id="X3" type="checkbox" name="X" value="-2">-2</label>
-                        <label><input id="X4" type="checkbox" name="X" value="-1">-1</label>
-                        <label><input id="X5" type="checkbox" name="X" value="0">0</label>
-                        <label><input id="X6" type="checkbox" name="X" value="1">1</label>
-                        <label><input id="X7" type="checkbox" name="X" value="2">2</label>
-                        <label><input id="X8" type="checkbox" name="X" value="3">3</label>
-                    </div>
-                    <div><label for="Y">Введите Y:</label> <input id="Y" name="Y" placeholder="(-3;3)"></div>
-                    <div><label for="R">Введите R:</label> <input id="R" name="R" placeholder="(1;4)"></div>
-                </td>
-                <td rowspan="2">
-                    <img src="task.png" alt='Problem with image loading!'>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div id="error" style="color: #ff0000"></div>
-                    <button class="button check" type="submit">Проверить точку</button>
-                    <button class="button clear" type="reset">Очистить</button>
-                </td>
-            </tr>
-
-        </table>
-    </form>
-<br>
-    <table id = "resultTable" class="boardTable center">
+<form id="form">
+    <table id="mainTable" class="center boardTable">
         <tr>
-            <th>X</th>
-            <th>Y</th>
-            <th>R</th>
-            <th>Текущее время</th>
-            <th>Время выполнения</th>
-            <th>Результат</th>
+            <td>
+                <div>
+                    <div>Выберете X:</div>
+                    <label><input id="X1" type="checkbox" name="X" value="-4">-4</label>
+                    <label><input id="X2" type="checkbox" name="X" value="-3">-3</label>
+                    <label><input id="X3" type="checkbox" name="X" value="-2">-2</label>
+                    <label><input id="X4" type="checkbox" name="X" value="-1">-1</label>
+                    <label><input id="X5" type="checkbox" name="X" value="0">0</label>
+                    <label><input id="X6" type="checkbox" name="X" value="1">1</label>
+                    <label><input id="X7" type="checkbox" name="X" value="2">2</label>
+                    <label><input id="X8" type="checkbox" name="X" value="3">3</label>
+                </div>
+                <div><label for="Y">Введите Y:</label> <input id="Y" maxlength="5" name="Y" placeholder="(-3;3)"></div>
+                <div><label for="R">Введите R:</label> <input id="R" maxlength="5" name="R" placeholder="(1;4)"></div>
+            </td>
+            <td rowspan="2">
+                <img src="task.png" alt='Problem with image loading!'>
+            </td>
         </tr>
+        <tr>
+            <td>
+                <div id="error" style="color: #ff0000"></div>
+                <button class="button check" id="submitButton" type="submit">Проверить точку</button>
+                <button class="button clear" id="clearButton" type="reset">Очистить</button>
+            </td>
+        </tr>
+
     </table>
-</main>
+</form>
+<br>
+<table id="resultTable" class="boardTable center">
+    <tr>
+        <th>X</th>
+        <th>Y</th>
+        <th>R</th>
+        <th>Текущее время</th>
+        <th>Время выполнения</th>
+        <th>Результат</th>
+    </tr>
+
+    <tbody id="answerValues">
+
+    </tbody>
+
+</table>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="js/main.js"></script>
 </body>

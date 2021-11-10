@@ -1,74 +1,84 @@
 <?php
+error_reporting(0);
 
-// Validate functions
-function validateX($xVal) {
-    return isset($xVal);
+session_start();
+date_default_timezone_set('Europe/Moscow');
+
+if (!isset($_SESSION["answer"])) $_SESSION["answer"] = array();
+
+function validateX($x) {
+    return isset($x);
 }
 
-function validateY($yVal) {
+function validateY($y) {
     $Y_MIN = -3;
     $Y_MAX = 3;
 
-    if (!isset($yVal))
+    if (!isset($y))
         return false;
 
-    $numY = str_replace(',', '.', $yVal);
-    return is_numeric($numY) && $numY >= $Y_MIN && $numY <= $Y_MAX;
+    $numY = str_replace(',', '.', $y);
+    return is_numeric($numY) && $numY > $Y_MIN && $numY < $Y_MAX;
 }
 
-function validateR($rVal) {
+function validateR($r) {
     $R_MIN = 1;
     $R_MAX = 4;
 
-    if (!isset($rVal))
+    if (!isset($r))
         return false;
 
-    $numR = str_replace(',', '.', $rVal);
-    return is_numeric($numR) && $numR >= $R_MIN && $numR <= $R_MAX;
+    $numR = str_replace(',', '.', $r);
+    return is_numeric($numR) && $numR > $R_MIN && $numR < $R_MAX;
 }
 
-function validateForm($xVal, $yVal, $rVal) {
-    return validateX($xVal) && validateY($yVal) && validateR($rVal);
+
+
+function isDataValid($x, $y, $r)
+{
+    return (validateR($r) && validateX($x) && validateY($y));
 }
 
-// Hit check functions
-function checkTriangle($xVal, $yVal, $rVal) {
-    return $xVal <= 0 && $yVal >= 0 &&
-        $xVal <= $rVal/2 && $yVal <= $rVal;
+function checkTriangle($x, $y, $r) {
+    return $x <= 0 && $y >= 0 &&
+        $x*2 <= $r && $y <= $r;
 }
 
-function checkRectangle($xVal, $yVal, $rVal) {
-    return $xVal >= 0 && $yVal <= 0 &&
-        $xVal <= $rVal && $yVal <= $rVal;
+function checkRectangle($x, $y, $r) {
+    return $x >= 0 && $y <= 0 &&
+        $x <= $r && $y <= $r;
 }
 
-function checkCircle($xVal, $yVal, $rVal) {
-    return $xVal <= 0 && $yVal <= 0 &&
-        sqrt($xVal*$xVal + $yVal*$yVal) <= $rVal;
-}
-function checkHit($xVal, $yVal, $rVal) {
-    return checkTriangle($xVal, $yVal, $rVal) || checkRectangle($xVal, $yVal, $rVal) ||
-        checkCircle($xVal, $yVal, $rVal);
+function checkCircle($x, $y, $r) {
+    return $x <= 0 && $y <= 0 &&
+        sqrt($x*$x + $y*$y) <= $r;
 }
 
-$xVal = $_POST['X'];
-$yVal = $_POST['Y'];
-$rVal = $_POST['R'];
 
-$timezone = $_POST['timezone'];
+function checkHit($x, $y, $r) {
+    return checkTriangle($x, $y, $r) || checkRectangle($x, $y, $r) ||
+        checkCircle($x, $y, $r);
+}
 
-$INSIDE = checkHit($xVal,$yVal,$rVal);
-$CONVERTED_INSIDE = $INSIDE ? "Внутри": "Снаружи";
-$current_time = date("j M o G:i:s", time()-$timezone*60);
-$executionTime = round(microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'], 7);
+$x =  $_POST["X"];
+$y =  $_POST["Y"];
+$r =  $_POST["R"];
 
-$ANSWER = "<tr>";
-$ANSWER .= "<td>" . $xVal . "</td>";
-$ANSWER .= "<td>" . $yVal . "</td>";
-$ANSWER .= "<td>" . $rVal . "</td>";
-$ANSWER .= "<td>" . $current_time . "</td>";
-$ANSWER .= "<td>" . $executionTime . "</td>";
-$ANSWER .= "<td>" . $CONVERTED_INSIDE . "</td>";
-$ANSWER .= "</tr>";
+if (!isDataValid($x, $y, $r)) {
+    http_response_code(400);
+    return;
+} else {
+    $coordsStatus = checkHit($x, $y, $r) ? "Внутри": "Снаружи";
+    $currentTime = date("H : i : s");
+    $benchmarkTime = number_format(microtime(true) - $_SERVER["REQUEST_TIME_FLOAT"], 10, ".", "") * 1000000;
+    array_push($_SESSION["answer"], "<tr>
+    <td>$x</td>
+    <td>$y</td>
+    <td>$r</td>
+    <td>$currentTime</td>
+    <td>$benchmarkTime</td>
+    <td>$coordsStatus</td>
+    </tr>");
+    foreach ($_SESSION["answer"] as $tableRow) echo $tableRow;
+}
 
-echo $ANSWER;
